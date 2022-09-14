@@ -4,6 +4,7 @@ config BR2_PACKAGE_SUNXI_MALI_UTGARD
 	depends on BR2_TOOLCHAIN_USES_GLIBC
 	select BR2_PACKAGE_HAS_LIBEGL
 	select BR2_PACKAGE_HAS_LIBGLES
+        select BR2_PACKAGE_HAS_LIBMALI
 	help
 	  Install userspace Allwinner OpenGL libraries for Mali
 	  Utgard GPUs.
@@ -17,6 +18,9 @@ config BR2_PACKAGE_PROVIDES_LIBEGL
 
 config BR2_PACKAGE_PROVIDES_LIBGLES
 	default "sunxi-mali-utgard"
+
+config BR2_PACKAGE_PROVIDES_LIBMALI
+        default "sunxi-mali-utgard"
 
 choice
 	prompt "Version"
