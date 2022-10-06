@@ -60,6 +60,7 @@ NCURSES_PATCH = \
 # ncurses-6.1-20191012.patch.gz
 NCURSES_IGNORE_CVES += CVE-2019-17594 CVE-2019-17595
 
+# batocera - add the termlib option for RPCS3
 NCURSES_CONF_OPTS = \
 	--without-cxx \
 	--without-cxx-binding \
@@ -76,7 +77,8 @@ NCURSES_CONF_OPTS = \
 	--disable-stripping \
 	--with-pkg-config-libdir="/usr/lib/pkgconfig" \
 	$(if $(BR2_PACKAGE_NCURSES_TARGET_PROGS),,--without-progs) \
-	--without-manpages
+	--without-manpages \
+	--with-termlib=tinfo
 
 ifeq ($(BR2_STATIC_LIBS),y)
 NCURSES_CONF_OPTS += --without-shared --with-normal
@@ -183,16 +185,6 @@ define NCURSES_TARGET_CLEANUP_TERMINFO
 	)
 endef
 NCURSES_POST_INSTALL_TARGET_HOOKS += NCURSES_TARGET_CLEANUP_TERMINFO
-
-#
-# On systems with an older version of tic, the installation of ncurses hangs
-# forever. To resolve the problem, build a static version of tic on host
-# ourselves, and use that during installation.
-#
-define HOST_NCURSES_BUILD_CMDS
-	$(HOST_MAKE_ENV) $(MAKE1) -C $(@D) sources
-	$(HOST_MAKE_ENV) $(MAKE) -C $(@D)/progs tic
-endef
 
 HOST_NCURSES_CONF_ENV = \
 	ac_cv_path_LDCONFIG=""

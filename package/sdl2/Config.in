@@ -31,9 +31,9 @@ comment "X11 video driver needs X.org"
 
 config BR2_PACKAGE_SDL2_KMSDRM
 	bool "KMS/DRM video driver"
-	depends on BR2_PACKAGE_LIBDRM
-# batocera
-#	depends on BR2_PACKAGE_MESA3D_GBM
+    # batocera
+    #depends on BR2_PACKAGE_MESA3D_GBM
+    select BR2_PACKAGE_LIBDRM
 
 comment "KMS/DRM video driver needs libdrm"
 	depends on !BR2_PACKAGE_LIBDRM
@@ -41,6 +41,21 @@ comment "KMS/DRM video driver needs libdrm"
 # batocera
 #comment "KMS/DRM video driver needs mesa3d w/ GBM"
 #	depends on !BR2_PACKAGE_MESA3D_GBM
+
+config BR2_PACKAGE_SDL2_WAYLAND
+	bool "wayland video driver"
+	depends on BR2_PACKAGE_WAYLAND
+
+comment "Wayland video driver needs wayland enabled"
+	depends on !BR2_PACKAGE_WAYLAND
+
+config BR2_PACKAGE_SDL2_VULKAN
+	bool "vulkan video driver"
+	depends on BR2_PACKAGE_VULKAN_HEADERS
+	depends on BR2_PACKAGE_VULKAN_LOADER
+
+comment "Vulkan video driver needs vulkan enabled"
+	depends on !BR2_PACKAGE_VULKAN_HEADERS || !BR2_PACKAGE_VULKAN_LOADER
 
 config BR2_PACKAGE_SDL2_OPENGL
 	bool "OpenGL (GLX)"
