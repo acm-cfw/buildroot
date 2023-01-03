@@ -3,8 +3,8 @@
 # sdl2
 #
 ################################################################################
-
-SDL2_VERSION = 2.24.1
+# batocera (update)
+SDL2_VERSION = 2.24.2
 SDL2_SOURCE = SDL2-$(SDL2_VERSION).tar.gz
 SDL2_SITE = http://www.libsdl.org/release
 SDL2_LICENSE = Zlib
@@ -217,7 +217,6 @@ else
 SDL2_CONF_OPTS += --disable-alsa
 endif
 
-# batocera
 ifeq ($(BR2_PACKAGE_SDL2_KMSDRM),y)
 SDL2_DEPENDENCIES += libdrm
 SDL2_CONF_OPTS += --enable-video-kmsdrm

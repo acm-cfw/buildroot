@@ -3,8 +3,8 @@
 # rpi-firmware
 #
 ################################################################################
-# batocera (update) - Aligns to kernel version: 5.15.74
-RPI_FIRMWARE_VERSION = 1.20221028
+# batocera (update) - Aligns to kernel version: 5.15.61
+RPI_FIRMWARE_VERSION = 1.20220830
 RPI_FIRMWARE_SITE = $(call github,raspberrypi,firmware,$(RPI_FIRMWARE_VERSION))
 RPI_FIRMWARE_LICENSE = BSD-3-Clause
 RPI_FIRMWARE_LICENSE_FILES = boot/LICENCE.broadcom
@@ -32,6 +32,14 @@ ifneq ($(RPI_FIRMWARE_CONFIG_FILE),)
 define RPI_FIRMWARE_INSTALL_CONFIG
 	$(INSTALL) -D -m 0644 $(RPI_FIRMWARE_CONFIG_FILE) \
 		$(BINARIES_DIR)/rpi-firmware/config.txt
+endef
+endif
+
+RPI_FIRMWARE_CMDLINE_FILE = $(call qstrip,$(BR2_PACKAGE_RPI_FIRMWARE_CMDLINE_FILE))
+ifneq ($(RPI_FIRMWARE_CMDLINE_FILE),)
+define RPI_FIRMWARE_INSTALL_CMDLINE
+	$(INSTALL) -D -m 0644 $(RPI_FIRMWARE_CMDLINE_FILE) \
+		$(BINARIES_DIR)/rpi-firmware/cmdline.txt
 endef
 endif
 
@@ -79,9 +87,9 @@ endef
 endif # INSTALL_VCDBG
 
 define RPI_FIRMWARE_INSTALL_IMAGES_CMDS
-	$(INSTALL) -D -m 0644 package/rpi-firmware/cmdline.txt $(BINARIES_DIR)/rpi-firmware/cmdline.txt
 	$(RPI_FIRMWARE_INSTALL_BIN)
 	$(RPI_FIRMWARE_INSTALL_CONFIG)
+	$(RPI_FIRMWARE_INSTALL_CMDLINE)
 	$(RPI_FIRMWARE_INSTALL_DTB)
 	$(RPI_FIRMWARE_INSTALL_DTB_OVERLAYS)
 endef

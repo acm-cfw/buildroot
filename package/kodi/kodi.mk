@@ -6,10 +6,9 @@
 
 # When updating the version, please also update kodi-jsonschemabuilder
 # and kodi-texturepacker
-KODI_VERSION_MAJOR = 19.4
+KODI_VERSION_MAJOR = 19.5
 KODI_VERSION_NAME = Matrix
-# batocera - backported v19.4 commit with libfmt 9.0 support.
-KODI_VERSION = 286694e9df8741313a688b46940661a30f36f35c
+KODI_VERSION = $(KODI_VERSION_MAJOR)-$(KODI_VERSION_NAME)
 KODI_SITE = $(call github,xbmc,xbmc,$(KODI_VERSION))
 KODI_LICENSE = GPL-2.0
 KODI_LICENSE_FILES = LICENSE.md
@@ -208,18 +207,7 @@ ifeq ($(BR2_TOOLCHAIN_HAS_LIBATOMIC),y)
 KODI_CONF_OPTS += -DCMAKE_EXE_LINKER_FLAGS=-latomic
 endif
 
-#batocera
-ifeq ($(BR2_PACKAGE_KODI_PLATFORM_GBM_GL),y)
-# batocera - don't set OGL for SBC use GLES instead
-  ifneq ($(BR2_PACKAGE_BATOCERA_SBC_XORG),y)
-    KODI_CONF_OPTS += \
-        -DCORE_PLATFORM_NAME=gbm \
-        -DGBM_RENDER_SYSTEM=gl \
-        -DENABLE_OPENGL=ON
-    KODI_DEPENDENCIES += libegl libglu libinput libxkbcommon mesa3d
-  endif
-endif
-
+# batocera
 ifeq ($(BR2_PACKAGE_KODI_PLATFORM_GBM_GLES),y)
 KODI_CONF_OPTS += \
         -DCORE_PLATFORM_NAME=gbm \
@@ -288,12 +276,13 @@ else
 KODI_CONF_OPTS += -DENABLE_EVENTCLIENTS=OFF
 endif
 
-ifeq ($(BR2_PACKAGE_KODI_ALSA_LIB),y)
-KODI_CONF_OPTS += -DENABLE_ALSA=ON
-KODI_DEPENDENCIES += alsa-lib
-else
+# batocera - disable alsa, we use pulse audio instead
+#ifeq ($(BR2_PACKAGE_KODI_ALSA_LIB),y)
+#KODI_CONF_OPTS += -DENABLE_ALSA=ON
+#KODI_DEPENDENCIES += alsa-lib
+#else
 KODI_CONF_OPTS += -DENABLE_ALSA=OFF
-endif
+#endif
 
 # batocera
 ifeq ($(BR2_PACKAGE_KODI_GBM),y)
@@ -391,7 +380,8 @@ else
 KODI_CONF_OPTS += -DENABLE_OPTICAL=OFF
 endif
 
-ifeq ($(BR2_PACKAGE_KODI_PULSEAUDIO),y)
+# batocera - fix dependency
+ifeq ($(BR2_PACKAGE_PULSEAUDIO),y)
 KODI_CONF_OPTS += -DENABLE_PULSEAUDIO=ON
 KODI_DEPENDENCIES += pulseaudio
 else
